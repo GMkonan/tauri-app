@@ -1,38 +1,21 @@
-import React from 'react'
-import logo from './logo.svg'
-import tauriCircles from './tauri.svg'
-import tauriWord from './wordmark.svg'
+import React, { useEffect, useState } from 'react'
+import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from "@tauri-apps/api/window";
+
 import './App.css'
 
 function App() {
+  const [message, setMessage] = useState('');
+  useEffect(() => {
+    invoke('my_return_command').then((message:any) => setMessage(message))
+    invoke("my_custom_command")
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="inline-logo">
-          <img src={tauriCircles} className="App-logo rotate" alt="logo" />
-          <img src={tauriWord} className="App-logo smaller" alt="logo" />
-        </div>
-        <a
-          className="App-link"
-          href="https://tauri.studio"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Tauri
-        </a>
-        <img src={logo} className="App-logo rotate" alt="logo" />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
+      <h1>{message}</h1>
+      <h2>Message in plain HTML</h2>
+      <button onClick={() => appWindow.close()}>Close Button</button>
     </div>
   )
 }
